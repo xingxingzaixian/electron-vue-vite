@@ -1,27 +1,42 @@
+import { rmSync } from 'fs';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
 import electron from 'vite-plugin-electron';
-import electronRenderer from 'vite-plugin-electron/renderer';
-import polyfillExports from 'vite-plugin-electron/polyfill-exports';
+import pkg from './package.json';
 
+rmSync('dist', { recursive: true, force: true });
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     electron({
       main: {
-        entry: 'electron-main/index.ts',
+        entry: 'electron/main/index.ts',
+        vite: {
+          build: {
+            sourcemap: false,
+            outDir: 'dist/electron/main',
+          },
+        },
       },
       preload: {
-        // Must be use absolute path, this is the limit of rollup
-        input: path.join(__dirname, './electron-preload/index.ts'),
+        input: {
+          // You can configure multiple preload here
+          index: path.join(__dirname, 'electron/preload/index.ts'),
+        },
+        vite: {
+          build: {
+            // For debug
+            sourcemap: 'inline',
+            outDir: 'dist/electron/preload',
+          },
+        },
       },
     }),
-    electronRenderer(),
-    polyfillExports(),
   ],
-  build: {
-    emptyOutDir: false,
+  server: {
+    host: pkg.env.VITE_DEV_SERVER_HOST,
+    port: pkg.env.VITE_DEV_SERVER_PORT,
   },
 });

@@ -2,10 +2,14 @@
   "name": "electron-desktop",
   "private": true,
   "version": "1.0.0",
-  "main": "dist/electron-main/index.js",
+  "main": "dist/electron/main/index.js",
   "scripts": {
     "dev": "vite",
     "build": "rimraf dist && vite build && electron-builder"
+  },
+  "env": {
+    "VITE_DEV_SERVER_HOST": "127.0.0.1",
+    "VITE_DEV_SERVER_PORT": 3300
   },
   "dependencies": {
     "vue": "^3.2.25"
@@ -15,6 +19,7 @@
     "electron": "^18.2.0",
     "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
+    "less": "^4.1.2",
     "rimraf": "^3.0.2",
     "typescript": "^4.5.4",
     "vite": "^2.9.5",

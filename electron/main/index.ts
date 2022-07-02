@@ -6,7 +6,9 @@ const createWindow = () => {
     // frame: false,
     // transparent: true,
     webPreferences: {
-      preload: path.join(__dirname, '../electron-preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+      preload: path.join(__dirname, '../preload/index.js'),
     },
   });
 
