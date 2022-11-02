@@ -3,22 +3,22 @@ import path from 'path';
 
 const createWindow = () => {
   const win = new BrowserWindow({
+    title: '示例工程',
     // frame: false,
     // transparent: true,
+    frame: app.isPackaged ? false : true,
     webPreferences: {
-      contextIsolation: true,
+      preload: path.join(__dirname, './preload/index.js'),
       nodeIntegration: true,
-      preload: path.join(__dirname, '../preload/index.js'),
     },
   });
 
+  win.webContents.openDevTools();
   if (app.isPackaged) {
     win.loadFile(path.join(__dirname, '../index.html'));
   } else {
     // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
-    const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
-    console.log(url);
-    win.loadURL(url);
+    win.loadURL(process.env.VITE_DEV_SERVER_URL as string);
   }
 };
 

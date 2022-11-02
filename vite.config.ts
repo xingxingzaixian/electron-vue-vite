@@ -1,7 +1,6 @@
 import { rmSync } from 'fs';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import * as path from 'path';
 import electron from 'vite-plugin-electron';
 import pkg from './package.json';
 
@@ -10,33 +9,31 @@ rmSync('dist', { recursive: true, force: true });
 export default defineConfig({
   plugins: [
     vue(),
-    electron({
-      main: {
-        entry: 'electron/main/index.ts',
+    electron([
+      {
+        entry: 'electron/index.ts',
         vite: {
           build: {
             sourcemap: false,
-            outDir: 'dist/electron/main',
+            outDir: 'dist/electron',
           },
         },
       },
-      preload: {
-        input: {
-          // You can configure multiple preload here
-          index: path.join(__dirname, 'electron/preload/index.ts'),
-        },
+      {
+        entry: 'electron/preload/index.ts',
         vite: {
           build: {
-            // For debug
-            sourcemap: 'inline',
+            sourcemap: false,
             outDir: 'dist/electron/preload',
           },
         },
       },
-    }),
+    ]),
   ],
-  server: {
-    host: pkg.env.VITE_DEV_SERVER_HOST,
-    port: pkg.env.VITE_DEV_SERVER_PORT,
-  },
+  server: process.env.VSCODE_DEBUG
+    ? {
+        host: pkg.debug.env.VITE_DEV_SERVER_HOSTNAME,
+        port: pkg.debug.env.VITE_DEV_SERVER_PORT,
+      }
+    : undefined,
 });
