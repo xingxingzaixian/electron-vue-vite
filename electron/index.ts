@@ -5,7 +5,7 @@ const createWindow = () => {
   const win = new BrowserWindow({
     title: '示例工程',
     // frame: false,
-    // transparent: true,
+    transparent: true,
     frame: app.isPackaged ? false : true,
     webPreferences: {
       preload: path.join(__dirname, './preload/index.js'),
